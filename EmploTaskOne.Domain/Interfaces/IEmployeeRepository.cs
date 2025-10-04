@@ -5,6 +5,6 @@ namespace EmploTaskOne.Domain.Interfaces
 {
     public interface IEmployeeRepository
     {
-        List<Employee> GetAllEmployees();
+        List<Employee> GetAll();
     }
 }

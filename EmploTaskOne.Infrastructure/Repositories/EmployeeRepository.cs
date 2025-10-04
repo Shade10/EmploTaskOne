@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace EmploTaskOne.Infrastructure.Repositories
 {
-    internal class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : IEmployeeRepository
     {
         private readonly EmploTaskOneDbContext _context;
 
@@ -15,7 +15,7 @@ namespace EmploTaskOne.Infrastructure.Repositories
             _context = context;
         }
 
-        public List<Employee> GetAllEmployees()
+        public List<Employee> GetAll()
         {
             return _context.Employees.Select(e => new Employee
             {

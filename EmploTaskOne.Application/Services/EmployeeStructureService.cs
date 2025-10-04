@@ -1,5 +1,6 @@
 ﻿using EmploTaskOne.Application.DTOs;
-using EmploTaskOne.Domain.Entities;
+using EmploTaskOne.Domain.Interfaces;
+using EmploTaskOne.Domain.Services;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,43 +8,41 @@ namespace EmploTaskOne.Application.Services
 {
     public class EmployeeStructureService
     {
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly EmployeeService _employeeService;
         private List<EmployeeStructureDto> _employeeHierarchy;
 
-        public List<EmployeeStructureDto> FillEmployeesStructure(List<Employee> employees)
+        public EmployeeStructureService(IEmployeeRepository employeeRepository)
         {
-            _employeeHierarchy = new List<EmployeeStructureDto>();
-            const int initialHierarchyRow = 1;
+            _employeeRepository = employeeRepository;
+            _employeeService = new EmployeeService();
+        }
 
-            foreach (var employee in employees)
+        public List<EmployeeStructureDto> FillEmployeesStructure()
+        {
+            var employees = _employeeRepository.GetAll();
+            var hierarchy = _employeeService.BuildHierarchy(employees);
+
+            _employeeHierarchy = hierarchy.Select(x => new EmployeeStructureDto
             {
-                BuildFullHierarchy(employee, employees, employee.SuperiorId, initialHierarchyRow);
-            }
+                EmployeeId = x.EmployeeId,
+                SuperiorId = x.SuperiorId,
+                HierarchyRow = x.HierarchyRow
+            }).ToList();
 
             return _employeeHierarchy;
         }
 
-        private void BuildFullHierarchy(Employee employee, List<Employee> allEmployees, int? superiorId, int hierarchyRow)
-        {
-            if (superiorId == null)
-                return;
-
-            _employeeHierarchy.Add(new EmployeeStructureDto
-            {
-                EmployeeId = employee.Id,
-                SuperiorId = superiorId.Value,
-                HierarchyRow = hierarchyRow
-            });
-
-            var nextSuperior = allEmployees.FirstOrDefault(x => x.Id == superiorId.Value);
-            if (nextSuperior != null)
-            {
-                BuildFullHierarchy(employee, allEmployees, nextSuperior.SuperiorId, hierarchyRow + 1);
-            }
-        }
-
         public int? GetSuperiorRowOfEmployee(int employeeId, int superiorId)
         {
-            var record = _employeeHierarchy.FirstOrDefault(x => x.EmployeeId == employeeId && x.SuperiorId == superiorId);
+            if (_employeeHierarchy == null)
+            {
+                FillEmployeesStructure();
+            }
+
+            var record = _employeeHierarchy.FirstOrDefault(x =>
+                x.EmployeeId == employeeId && x.SuperiorId == superiorId);
+
             return record?.HierarchyRow;
         }
     }
