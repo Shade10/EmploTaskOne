@@ -41,7 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTOs\EmployeeHierarchyStructureDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EmployeeHierarchyStructureService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EmploTaskOne.Domain\EmploTaskOne.Domain.csproj">
+      <Project>{07D59984-219A-4E82-8E14-595A7A709F80}</Project>
+      <Name>EmploTaskOne.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
