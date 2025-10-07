@@ -1,34 +1,30 @@
 ﻿using EmploTaskOne.Application.DTOs;
+using EmploTaskOne.Application.Interfaces;
+using EmploTaskOne.Application.Mappers;
 using EmploTaskOne.Domain.Interfaces;
-using EmploTaskOne.Domain.Services;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace EmploTaskOne.Application.Services
 {
-    public class EmployeeStructureService
+    public class EmployeeStructureService : IEmployeeStructureService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly EmployeeService _employeeService;
+        private readonly IEmployeeHierarchyService _employeeHierarchyService;
         private List<EmployeeStructureDto> _employeeHierarchy;
 
-        public EmployeeStructureService(IEmployeeRepository employeeRepository)
+        public EmployeeStructureService(IEmployeeRepository employeeRepository, IEmployeeHierarchyService employeeHierarchyService)
         {
             _employeeRepository = employeeRepository;
-            _employeeService = new EmployeeService();
+            _employeeHierarchyService = employeeHierarchyService;
         }
 
         public List<EmployeeStructureDto> FillEmployeesStructure()
         {
             var employees = _employeeRepository.GetAll();
-            var hierarchy = _employeeService.BuildHierarchy(employees);
+            var hierarchy = _employeeHierarchyService.BuildHierarchy(employees);
 
-            _employeeHierarchy = hierarchy.Select(x => new EmployeeStructureDto
-            {
-                EmployeeId = x.EmployeeId,
-                SuperiorId = x.SuperiorId,
-                HierarchyRow = x.HierarchyRow
-            }).ToList();
+            _employeeHierarchy = EmployeeStructureMapper.ToDtoList(hierarchy);
 
             return _employeeHierarchy;
         }

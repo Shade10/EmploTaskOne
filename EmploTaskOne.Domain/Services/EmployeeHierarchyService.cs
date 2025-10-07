@@ -6,12 +6,11 @@ using System.Linq;
 
 namespace EmploTaskOne.Domain.Services
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeHierarchyService : IEmployeeHierarchyService
     {
         public List<EmployeeStructure> BuildHierarchy(List<Employee> employees)
         {
             var hierarchy = new List<EmployeeStructure>();
-
             const int initialHierarchyRow = 1;
 
             foreach (var employee in employees)
@@ -25,7 +24,9 @@ namespace EmploTaskOne.Domain.Services
         private void BuildFullHierarchy(Employee employee, List<Employee> allEmployees, int? superiorId, int hierarchyRow, List<EmployeeStructure> hierarchy)
         {
             if (superiorId == null)
+            {
                 return;
+            }
 
             hierarchy.Add(new EmployeeStructure
             {

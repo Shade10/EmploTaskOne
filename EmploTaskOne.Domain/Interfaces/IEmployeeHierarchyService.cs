@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EmploTaskOne.Domain.Interfaces
 {
-    public interface IEmployeeService
+    public interface IEmployeeHierarchyService
     {
         List<EmployeeStructure> BuildHierarchy(List<Employee> employees);
     }

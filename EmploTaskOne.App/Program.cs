@@ -1,8 +1,9 @@
-﻿using System;
-using EmploTaskOne.Application.Services;
-using EmploTaskOne.Infrastructure.Repositories;
+﻿using EmploTaskOne.Application.Services;
 using EmploTaskOne.Domain.Interfaces;
+using EmploTaskOne.Domain.Services;
 using EmploTaskOne.Infrastructure.Context;
+using EmploTaskOne.Infrastructure.Repositories;
+using System;
 
 namespace EmploTaskOne.App
 {
@@ -12,10 +13,10 @@ namespace EmploTaskOne.App
         {
             using (var db = new EmploTaskOneDbContext())
             {
-                var dbContext = new EmploTaskOneDbContext();
-                IEmployeeRepository employeeRepository = new EmployeeRepository(dbContext);
+                IEmployeeRepository employeeRepository = new EmployeeRepository(db);
+                var employeeHierarchyService = new EmployeeHierarchyService();
+                var service = new EmployeeStructureService(employeeRepository, employeeHierarchyService);
 
-                var service = new EmployeeStructureService(employeeRepository);
                 service.FillEmployeesStructure();
 
                 Console.WriteLine("Row 1 = " + service.GetSuperiorRowOfEmployee(2, 1)); 

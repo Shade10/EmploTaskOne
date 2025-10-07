@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\EmployeeStructureDto.cs" />
+    <Compile Include="Interfaces\IEmployeeStructureService.cs" />
+    <Compile Include="Mappers\EmployeeStructureMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EmployeeStructureService.cs" />
   </ItemGroup>
